@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundimage">
+    <TextView
+        android:text="Choose a Game Mode"
+        android:layout_width="match_parent"
+        android:layout_height="163.5dp"
+        android:id="@+id/Title"
+        android:background="@drawable/paperelement"
+        android:layout_gravity="top"
+        android:gravity="center"
+        android:textColor="#ff455a64"
+        android:layout_marginBottom="77.5dp" />
+    <Button
+        android:text="Math and Science Extravaganza with Friends"
+        android:layout_width="match_parent"
+        android:layout_height="103.0dp"
+        android:id="@+id/gameButton"
+        android:background="@drawable/paperelement"
+        android:textColor="#ff455a64"
+        android:gravity="center" />
+    <Button
+        android:text="Draw Test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/drawTest" />
+</LinearLayout>

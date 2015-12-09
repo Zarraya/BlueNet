@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundimage">
+    <TextView
+        android:text="New Game"
+        android:layout_width="match_parent"
+        android:layout_height="159.0dp"
+        android:id="@+id/newGameTitle"
+        android:background="@drawable/paperelement"
+        android:gravity="center" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="54.5dp">
+        <TextView
+            android:text="Number of Players: "
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/numPlayersText"
+            android:layout_marginLeft="22.0dp"
+            android:gravity="center_vertical" />
+        <EditText
+            android:inputType="number"
+            android:theme="@android:style/Widget.DeviceDefault.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/numPlayers"
+            android:layout_marginRight="24.0dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="54.5dp">
+        <TextView
+            android:text="Game/Device Name:"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/nameText"
+            android:layout_marginLeft="22.0dp"
+            android:gravity="center_vertical" />
+        <EditText
+            android:layout_width="match_parent"
+            android:theme="@android:style/Widget.DeviceDefault.EditText"
+            android:layout_height="match_parent"
+            android:id="@+id/editText1"
+            android:layout_marginRight="24.0dp" />
+    </LinearLayout>
+    <Button
+        android:text="Create"
+        android:layout_width="match_parent"
+        android:layout_height="89.5dp"
+        android:id="@+id/createButton"
+        android:gravity="center"
+        android:background="@drawable/paperelement"
+        android:maxHeight="50dp"
+        android:clickable="true"
+        android:layout_marginTop="45.5dp" />
+</LinearLayout>
