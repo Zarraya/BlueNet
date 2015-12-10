@@ -142,7 +142,13 @@ namespace BlueNet
 						//enable discoverability for ever
 						EnsureDiscoverable();
 
+						ProgressDialog dialogSpin = new ProgressDialog(this, 5);
+						dialogSpin.SetProgressStyle(ProgressDialogStyle.Spinner);
+						dialogSpin.Indeterminate = true;
+
 						SetContentView(Resource.Layout.WaitView);
+
+						dialogSpin.Show();
 					};
 
 				});
@@ -280,11 +286,6 @@ namespace BlueNet
 
 			messagesViewAdapter.Add (prompts [randInt]);
 
-//			if (!turn) {
-//
-//				subButt.Enabled = false;
-//			}
-
 			makeMove ();
 		}
 
@@ -344,18 +345,13 @@ namespace BlueNet
 
 					image = dt.done();
 
-					//MessageStruct message = new MessageStruct();
-					//message.Data = "Image Sent";
-					//message.Number = 0;
-					//message.Pass = false;
+					string message = "Image Sent.";
 
-					//messages.Add(message);
+					messages.Add(message);
 
-					//byte[] temp = MyHandler.RawSerialize(message);
+					SendMessages(handle.encode(true, false, 0, message));
 
-					//SendMessages(temp);
-
-					//messagesViewAdapter.Add(message.Data);
+					messagesViewAdapter.Add(message);
 
 					SetContentView(Resource.Layout.GameView);
 				};
@@ -372,17 +368,12 @@ namespace BlueNet
 
 				doneButt.Click+= (object sender, EventArgs e) => {
 
-					//MessageStruct message = new MessageStruct();
-					//message.Data = text.Text;
-					//message.Number = 0;
-					//message.Pass = false;
 
-					//messages.Add(message);
-					//messagesViewAdapter.Add(message.Data);
 
-					//byte[] temp = MyHandler.RawSerialize(message);
+					messages.Add(text.Text);
+					messagesViewAdapter.Add(text.Text);
 
-					//SendMessages(temp);
+					SendMessages(handle.encode(true, false, 0, text.Text));
 				};
 			}
 
@@ -392,7 +383,9 @@ namespace BlueNet
 
 
 
-		public void messageRecived(){
+		public void messageRecived(byte[] message){
+
+
 		}
 
 
