@@ -14,9 +14,8 @@ public final class R {
         public static final int backgroundimage=0x7f020000;
         public static final int bmn_icon=0x7f020001;
         public static final int icon=0x7f020002;
-        public static final int monoandroidsplash=0x7f020003;
-        public static final int paperelement=0x7f020004;
-        public static final int titlescreen=0x7f020005;
+        public static final int paperelement=0x7f020003;
+        public static final int titlescreen=0x7f020004;
     }
     public static final class id {
         public static final int Title=0x7f070010;
@@ -91,7 +90,6 @@ public final class R {
         public static final int title_paired_devices=0x7f04000b;
     }
     public static final class style {
-        public static final int Mono_Android_Theme_Splash=0x7f050002;
         public static final int Theme_Main=0x7f050001;
         public static final int Theme_Splash=0x7f050000;
     }

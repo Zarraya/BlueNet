@@ -665,6 +665,10 @@ namespace BlueNet
 				byte[] temp = encode(pass,type,number,data);
 				bluetooth.SendMessages (temp);
 
+				//add local device values to the counts
+				bluetooth.randomCount++;
+				bluetooth.randomTotal += number;
+
 				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
 			}
 
