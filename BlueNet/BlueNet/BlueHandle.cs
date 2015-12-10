@@ -580,6 +580,9 @@ namespace BlueNet
 			/// <param name="number">Number.</param>
 			/// <param name="data">Data.</param>
 			public string decode(bool pass, bool type, int number, byte[] data){
+
+				Console.WriteLine ("Decode");
+
 				string temp = System.Text.Encoding.UTF8.GetString(data);
 				string[] bools = temp.Split ('*');
 				pass = System.Convert.ToBoolean(bools [0]);
