@@ -300,7 +300,9 @@ namespace BlueNet
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
-							string player = bluetooth.playersNotPlayed.ToArray()[message.Number];
+
+							string[] players = bluetooth.playersNotPlayed.ToArray;
+							string player = players [message.Number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
 								// TODO MAKE MOVE HERE
