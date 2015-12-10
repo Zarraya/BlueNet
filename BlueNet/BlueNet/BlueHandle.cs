@@ -34,9 +34,15 @@ namespace BlueNet
 		public ArrayAdapter<string> messagesViewAdapter;
 		private MyHandler handle;
 
+
+
+
 		// Debugging
 		private const string TAG = "BluetoothChat";
 		private bool activeReturn = false;
+
+
+
 
 		// Message types sent from the BluetoothChatService Handler
 		// TODO: Make into Enums
@@ -46,19 +52,30 @@ namespace BlueNet
 		public const int MESSAGE_DEVICE_NAME = 4;
 		public const int MESSAGE_TOAST = 5;
 
+
+
+
 		// Key names received from the BluetoothChatService Handler
 		public const string DEVICE_NAME = "device_name";
 		public const string INDEX = "index";
 		public const string TOAST = "toast";
+
+
+
 
 		// Intent request codes
 		private const int REQUEST_CONNECT_DEVICE = 1;
 		private const int REQUEST_ENABLE_BT = 2;
 
 
+
+
 		// Names of connected devices
 		protected ArrayList DeviceNames = new ArrayList();
 		private ArrayList playersNotPlayed = new ArrayList ();
+
+
+
 
 		// Bluetooth Adapter
 		private BluetoothAdapter bluetoothAdapter = null;
@@ -149,6 +166,9 @@ namespace BlueNet
 		}
 
 
+
+
+
 		protected override void OnStart ()
 		{
 			base.OnStart ();
@@ -175,6 +195,9 @@ namespace BlueNet
 			}
 		}
 
+
+
+
 		protected override void OnResume ()
 		{
 			base.OnResume ();
@@ -193,6 +216,9 @@ namespace BlueNet
 			}
 		}
 
+
+
+
 		protected override void OnDestroy ()
 		{
 			base.OnDestroy ();
@@ -205,6 +231,8 @@ namespace BlueNet
 			}
 		}
 
+
+
 		/// <summary>
 		/// Ensures the device is discoverable.
 		/// </summary>
@@ -216,6 +244,8 @@ namespace BlueNet
 				StartActivity (discoverableIntent);
 			}
 		}
+
+
 
 		/// <summary>
 		/// Determines whether this instance has messages the specified readBuf.
@@ -230,6 +260,10 @@ namespace BlueNet
 			}
 			return false;
 		}
+
+
+
+
 		/// <summary>
 		/// Devices the found.
 		/// </summary>
@@ -243,6 +277,9 @@ namespace BlueNet
 			}
 			return false;
 		}
+
+
+
 
 		public void startGame(){
 
@@ -265,6 +302,9 @@ namespace BlueNet
 
 			makeMove ();
 		}
+
+
+
 
 		public void makeMove(){
 
@@ -364,8 +404,18 @@ namespace BlueNet
 
 		}
 
+
+
+
 		public void messageRecived(){
 		}
+
+
+
+
+
+
+
 
 		// The Handler that gets information back from the BluetoothChatService
 		private class MyHandler : Handler
@@ -377,15 +427,15 @@ namespace BlueNet
 				bluetooth = blue;	
 			}
 
+
+
+
 			public override void HandleMessage (Message msg)
 			{
 				switch (msg.What) {
 				case MESSAGE_STATE_CHANGE:
 					switch (msg.Arg1) {
 					case BluetoothChatService.STATE_CONNECTED:
-						//bluetoothChat.title.SetText (Resource.String.title_connected_to);
-						//bluetoothChat.title.Append (bluetoothChat.connectedDeviceName);
-						//bluetoothChat.conversationArrayAdapter.Clear ();
 						break;
 					case BluetoothChatService.STATE_CONNECTING:
 						break;
@@ -464,7 +514,7 @@ namespace BlueNet
 							int average = bluetooth.randomCount / bluetooth.maxDevices;
 							//TODO SORT DEVICES ? how is this sorting
 							bluetooth.DeviceNames.Sort();
-							string[] temp = (string[]) bluetooth.DeviceNames.ToArray ();
+							string[] temp = Array.ConvertAll( bluetooth.DeviceNames.ToArray (), x => x.ToString());
 
 							// if you match, you are the first player
 							if (temp [average] == bluetooth.DeviceName) {
@@ -500,6 +550,7 @@ namespace BlueNet
 							temp += " ";
 						}
 						//StringToByteArray(temp);
+						Console.WriteLine(temp);
 						newMessage.Data = temp;
 						if (bluetooth.maxDevices != 0) {
 							newMessage.Number = bluetooth.maxDevices;
@@ -519,6 +570,9 @@ namespace BlueNet
 				}
 			}
 
+
+
+
 			/// <summary>
 			/// Processes the message.
 			/// </summary>
@@ -532,6 +586,10 @@ namespace BlueNet
 				}
 				return false;
 			}
+
+
+
+
 			/// <summary>
 			/// Adds the device.and updates text for devices connected to
 			/// </summary>
@@ -543,7 +601,7 @@ namespace BlueNet
 					bluetooth.devices++;
 					Toast.MakeText (Application.Context, "Connected to " + device, ToastLength.Short).Show ();
 
-
+					Console.WriteLine (device);
 					if((bluetooth.devices == bluetooth.maxDevices) && (bluetooth.maxDevices != 0)){
 						// send random number to decide who goes first
 						sendStart();
@@ -552,6 +610,9 @@ namespace BlueNet
 				}
 				return false;
 			}
+
+
+
 
 			/// <summary>
 			/// Sends the start. message with a random int, for determining who the first player is.
@@ -569,6 +630,9 @@ namespace BlueNet
 				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
 			}
 
+
+
+
 			//found online
 			public static byte[] RawSerialize( object anything )
 			{
@@ -579,7 +643,11 @@ namespace BlueNet
 				Marshal.Copy( buffer, rawDatas, 0, rawSize );
 				Marshal.FreeHGlobal( buffer );
 				return rawDatas;
+
 			}
+
+
+
 
 			// found online
 			public static object RawDeserialize( byte[] rawData, int position, Type
@@ -593,7 +661,11 @@ namespace BlueNet
 				object retobj = Marshal.PtrToStructure( buffer, anyType );
 				Marshal.FreeHGlobal( buffer );
 				return retobj;
+
 			}
+
+
+
 
 			/// <summary>
 			/// Decode the specified message.
@@ -609,6 +681,9 @@ namespace BlueNet
 				return messages;
 
 			}
+
+
+
 			/// <summary>
 			/// Encode the specified message.
 			/// </summary>
@@ -638,6 +713,9 @@ namespace BlueNet
 				return temp;
 			}
 
+
+
+
 			/// <summary>
 			/// Strings to byte array.
 			/// </summary>
@@ -648,6 +726,10 @@ namespace BlueNet
 				System.Buffer.BlockCopy(temp.ToCharArray(),0,bytes,0,bytes.Length);
 				return bytes;
 			}
+
+
+
+
 			/// <summary>
 			/// Bytes the array to string.
 			/// </summary>
