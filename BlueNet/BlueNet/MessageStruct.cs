@@ -16,8 +16,8 @@ namespace BlueNet
 
 		int number;
 
-		[MarshalAs(UnmanagedType.LPStr, SizeConst = 100000000)]
-		string data;
+		[MarshalAs(UnmanagedType.LPStr, SizeConst = 50)]
+		byte[] data;
 
 		public int Number {
 			get {

@@ -252,8 +252,8 @@ namespace BlueNet
 		/// </summary>
 		/// <returns><c>true</c> if this instance has messages the specified readBuf; otherwise, <c>false</c>.</returns>
 		/// <param name="readBuf">Read buffer.</param>
-		private bool HasMessages(MessageStruct str){
-			foreach (MessageStruct temp in messages) {
+		private bool HasMessages(string str){
+			foreach (string temp in messages) {
 				if (temp.Equals(str)){
 					return true;
 				}
@@ -366,9 +366,9 @@ namespace BlueNet
 
 					messages.Add(message);
 
-					byte[] temp = MyHandler.RawSerialize(message);
+					//byte[] temp = MyHandler.RawSerialize(message);
 
-					SendMessages(temp);
+					//SendMessages(temp);
 
 					messagesViewAdapter.Add(message.Data);
 
@@ -395,9 +395,9 @@ namespace BlueNet
 					messages.Add(message);
 					messagesViewAdapter.Add(message.Data);
 
-					byte[] temp = MyHandler.RawSerialize(message);
+					//byte[] temp = MyHandler.RawSerialize(message);
 
-					SendMessages(temp);
+					//SendMessages(temp);
 				};
 			}
 
@@ -449,12 +449,6 @@ namespace BlueNet
 					}
 					break;
 				case MESSAGE_WRITE:
-					byte[] writeBuf = (byte[])msg.Obj;
-
-					// put the message in the messageList
-					if (!bluetooth.HasMessages ((MessageStruct)RawDeserialize(writeBuf, 0, typeof(MessageStruct)))) {
-						bluetooth.messages.Add ((MessageStruct)RawDeserialize(writeBuf, 0, typeof(MessageStruct)));
-					}
 
 					break;
 					// reads the message, if it is a device list then updates device list, else updates the message list
@@ -465,31 +459,37 @@ namespace BlueNet
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
-					MessageStruct message = (MessageStruct)RawDeserialize (readBuf, 0, typeof(MessageStruct));
-					if (message.Pass && !message.Type) {
+					bool pass;
+					bool type;
+					int number;
+					string data;
+
+
+					data = decode(pass, type, number, readBuf);
+					if (pass && !type) {
 						//get devices
 						// decode byte[] for device names
-						if (message.Number != 0) {
-							bluetooth.maxDevices = message.Number;
+						if (number != 0) {
+							bluetooth.maxDevices = number;
 						}
 						//ByteArrayToString(
-						string[] devices = message.Data.Split(' ');
+						string[] devices = data.Split(' ');
 
 						foreach (string device in devices) {
 							// add unique devices to the list
 							AddDevice(device);
 						}
 
-					} else if (!message.Pass) {
+					} else if (!pass) {
 						//add message to the messageList
-						if (ProcessMessage (message)) {
+						if (ProcessMessage (data)) {
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
 
 
 							string[] players = Array.ConvertAll<object, string>( bluetooth.playersNotPlayed.ToArray(), x => x.ToString());
-							string player = players [message.Number];
+							string player = players [number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
 								// TODO MAKE MOVE HERE
@@ -507,7 +507,7 @@ namespace BlueNet
 						// calculate if this is the starting device
 						// add numbers to the count
 						bluetooth.randomCount++;
-						bluetooth.randomTotal += message.Number;
+						bluetooth.randomTotal += number;
 
 						// if all numbers have been received then find average
 						if(bluetooth.maxDevices == bluetooth.randomCount){
@@ -517,7 +517,7 @@ namespace BlueNet
 							string[] temp = Array.ConvertAll( bluetooth.DeviceNames.ToArray (), x => x.ToString());
 
 							// if you match, you are the first player
-							if (temp [average] == bluetooth.DeviceName) {
+							if (temp [average].Equals(bluetooth.DeviceName)) {
 								// execute turn if it is you TODO
 								// START THE GAME HERE ######################## TODO
 								// CHOOSE A RANDOM PROMPT
@@ -534,32 +534,34 @@ namespace BlueNet
 
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
-					// POTENTIAL PROBLEM TODO
-					string temp1 = msg.Data.GetString (DEVICE_NAME);
-					if(AddDevice(temp1)){
+
+					bool newPass;
+					bool newType;
+					int newNumber;
+					string newData;
+
+
+					string deviceName = msg.Data.GetString (DEVICE_NAME);
+					if(AddDevice(deviceName)){
 						bluetooth.directDevices++;
 
 						// send updated device list to all
-						MessageStruct newMessage = new MessageStruct();
-						newMessage.Pass = true;
-						newMessage.Type = false;
-						string temp = "";
+						newPass = true;
+						newType = false;
+						newData = "";
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
-							temp += device;
-							temp += " ";
+							newData += device;
+							newData += " ";
 						}
-						//StringToByteArray(temp);
-						Console.WriteLine(temp);
-						newMessage.Data = temp;
 						if (bluetooth.maxDevices != 0) {
-							newMessage.Number = bluetooth.maxDevices;
+							newNumber = bluetooth.maxDevices;
 						} else {
-							newMessage.Number = 0;
+							newNumber = 0;
 						}
 
 						// sends the devices out to all devices
-						byte[] byteMessage = RawSerialize (newMessage);
+						byte[] byteMessage = encode(newPass, newType, newNumber, newData);
 						bluetooth.SendMessages (byteMessage);
 
 					}
@@ -569,7 +571,33 @@ namespace BlueNet
 					break;					
 				}
 			}
+			/// <summary>
+			/// Decode the specified pass, type, number and data.
+			/// </summary>
+			/// <param name="pass">If set to <c>true</c> pass.</param>
+			/// <param name="type">If set to <c>true</c> type.</param>
+			/// <param name="number">Number.</param>
+			/// <param name="data">Data.</param>
+			public string decode(bool pass, bool type, int number, byte[] data){
+				string temp = System.Text.Encoding.UTF8.GetString(data);
+				string[] bools = temp.Split ('*', 4);
+				pass = (bool) bools [0];
+				type = (bool) bools [1];
+				number = Integer.ParseInt(bools [2]);
+				return bools [3];
 
+			}
+			/// <summary>
+			/// Encode the specified pass, type, number and data.
+			/// </summary>
+			/// <param name="pass">If set to <c>true</c> pass.</param>
+			/// <param name="type">If set to <c>true</c> type.</param>
+			/// <param name="number">Number.</param>
+			/// <param name="data">Data.</param>
+			public byte[] encode(bool pass, bool type, int number, string data){
+				string temp = pass.ToString () + "*" + type.ToString () + "*" + number + "*" + data;
+				return System.Text.Encoding.UTF8.GetBytes (temp);
+			}
 
 
 
@@ -578,7 +606,7 @@ namespace BlueNet
 			/// </summary>
 			/// <returns><c>true</c>, if message was new, <c>false</c> otherwise.</returns>
 			/// <param name="message">Message.</param>
-			public bool ProcessMessage(MessageStruct message){
+			public bool ProcessMessage(string message){
 				if (!bluetooth.HasMessages (message)) {
 					bluetooth.messages.Add (message);
 
@@ -618,101 +646,23 @@ namespace BlueNet
 			/// Sends the start. message with a random int, for determining who the first player is.
 			/// </summary>
 			public void sendStart(){
-				MessageStruct newMessage = new MessageStruct ();
+				bool pass;
+				bool type;
+				int number;
+				string data;
+
 				Random rand = new Random ();
 
-				newMessage.Number = rand.Next (1, bluetooth.maxDevices);
-				newMessage.Type = true;
-				newMessage.Pass = true;
-				byte[] temp = RawSerialize (newMessage);
+				number = rand.Next (1, bluetooth.maxDevices);
+				type = true;
+				pass = true;
+				data = "potato";
+
+				byte[] temp = encode(pass,type,number,data);
 				bluetooth.SendMessages (temp);
 
 				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
 			}
-
-
-
-
-			//found online
-			public static byte[] RawSerialize( object anything )
-			{
-				int rawSize = Marshal.SizeOf( anything );
-				IntPtr buffer = Marshal.AllocHGlobal( rawSize );
-				Marshal.StructureToPtr( anything, buffer, false );
-				byte[] rawDatas = new byte[ rawSize ];
-				Marshal.Copy( buffer, rawDatas, 0, rawSize );
-				Marshal.FreeHGlobal( buffer );
-				return rawDatas;
-
-			}
-
-
-
-
-			// found online
-			public static object RawDeserialize( byte[] rawData, int position, Type
-				anyType )
-			{
-				int rawsize = Marshal.SizeOf( anyType );
-				if( rawsize > rawData.Length )
-					return null;
-				IntPtr buffer = Marshal.AllocHGlobal( rawsize );
-				Marshal.Copy( rawData, position, buffer, rawsize );
-				object retobj = Marshal.PtrToStructure( buffer, anyType );
-				Marshal.FreeHGlobal( buffer );
-				return retobj;
-
-			}
-
-
-
-
-			/// <summary>
-			/// Decode the specified message.
-			/// </summary>
-			/// <param name="message">Message.</param>
-			public MessageStruct Decode(byte[] message){
-				MessageStruct messages = new MessageStruct ();
-				int size = Marshal.SizeOf (messages);
-				IntPtr pointer = Marshal.AllocHGlobal (size);
-				Marshal.Copy (message, 0, pointer, size);
-				messages = (MessageStruct)Marshal.PtrToStructure (pointer, messages.GetType ());
-				Marshal.FreeHGlobal (pointer);
-				return messages;
-
-			}
-
-
-
-			/// <summary>
-			/// Encode the specified message.
-			/// </summary>
-			/// <param name="message">Message.</param>
-			public byte[] Encode (MessageStruct message){
-//				int size = Marshal.SizeOf (message);
-//				byte[] array = new byte[size];
-//				IntPtr pointer = Marshal.AllocHGlobal (size);
-//				Marshal.StructureToPtr (message, pointer, false);
-//				Marshal.Copy (pointer, array, 0, size);
-//				Marshal.FreeHGlobal (pointer);
-//				return array;
-//				System.Collections.ArrayList temp;
-				byte[] temp;
-				using (var ms = new MemoryStream ()) {
-
-					Serializer.Serialize (ms, message);
-
-					temp = ms.ToArray ();
-				}
-
-				foreach (byte b in temp) {
-
-					Console.WriteLine (b);
-				}
-
-				return temp;
-			}
-
 
 
 
