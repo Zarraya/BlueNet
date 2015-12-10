@@ -74,8 +74,8 @@ namespace BlueNet
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			DeviceName = bluetoothAdapter.Name;
 			handle = new MyHandler (this);
-			//messagesViewAdapter = new ArrayAdapter<string>(this, Resource.Layout.message, (string[])messageContents.ToArray());
 
+			messagesViewAdapter = new ArrayAdapter<string>(this, Resource.Layout.message);
 
 			// If the adapter is null, then Bluetooth is not supported
 			if (bluetoothAdapter == null) {
@@ -256,7 +256,7 @@ namespace BlueNet
 
 			int randInt = rnd.Next(0, prompts.Length);
 
-			messageContents.Add (prompts [randInt]);
+			messagesViewAdapter.Add (prompts [randInt]);
 
 //			if (!turn) {
 //
@@ -330,7 +330,7 @@ namespace BlueNet
 
 					SendMessages(temp);
 
-					messageContents.Add(message.Data);
+					messagesViewAdapter.Add(message.Data);
 
 					SetContentView(Resource.Layout.GameView);
 				};
@@ -353,13 +353,18 @@ namespace BlueNet
 					message.Pass = false;
 
 					messages.Add(message);
-					messageContents.Add(message.Data);
+					messagesViewAdapter.Add(message.Data);
 
 					byte[] temp = MyHandler.RawSerialize(message);
 
 					SendMessages(temp);
 				};
 			}
+
+
+		}
+
+		public void messageRecived(){
 		}
 
 		// The Handler that gets information back from the BluetoothChatService
@@ -433,7 +438,7 @@ namespace BlueNet
 							// remove player from list of people who haven't played
 
 
-							string[] players = (string[])bluetooth.playersNotPlayed.ToArray();
+							string[] players = Array.ConvertAll<object, string>( bluetooth.playersNotPlayed.ToArray(), x => x.ToString());
 							string player = players [message.Number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
