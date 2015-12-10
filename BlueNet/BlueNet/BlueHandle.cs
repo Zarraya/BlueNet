@@ -552,8 +552,7 @@ namespace BlueNet
 						newData = "";
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
-							newData += device;
-							newData += " ";
+							newData = newData + device + " ";
 						}
 						if (bluetooth.maxDevices != 0) {
 							newNumber = bluetooth.maxDevices;
@@ -581,7 +580,7 @@ namespace BlueNet
 			/// <param name="data">Data.</param>
 			public string decode(bool pass, bool type, int number, byte[] data){
 
-				Console.WriteLine ("Decode");
+
 
 				string temp = System.Text.Encoding.UTF8.GetString(data);
 				string[] bools = temp.Split ('*');
