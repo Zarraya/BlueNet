@@ -437,96 +437,103 @@ namespace BlueNet
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
+//					foreach (byte b in readBuf) {
+//
+//
+//					}
+					bool set = false;
 					bool pass = true;
 					bool type = true;
 					int number = 0;
 					string data = "";
 
 
-					data = decode(pass, type, number, readBuf);
+					data = decode (set, pass, type, number, readBuf);
 
-					if (pass && !type) {
-						//get devices
-						// decode byte[] for device names
-						if (number != 0) {
-							bluetooth.maxDevices = number;
-						}
-						//ByteArrayToString(
-						string[] devices = data.Split(' ');
+					if (set) {
+						if (pass && !type) {
+							//get devices
+							// decode byte[] for device names
+							if (number != 0) {
+								bluetooth.maxDevices = number;
+							}
+							//ByteArrayToString(
+							string[] devices = data.Split (' ');
 					
-						bool ans = false;
+							bool ans = false;
 
-						foreach (string device in devices) {
-							// add unique devices to the list
-							if(AddDevice(device)){
-								//forward devices
-								ans = true;
+							foreach (string device in devices) {
+								// add unique devices to the list
+								if (AddDevice (device)) {
+									//forward devices
+									ans = true;
 
-								Console.WriteLine (device + "\n\t" + bluetooth.devices);
-							}
-
-						}
-						if (ans) {
-							bluetooth.SendMessages (readBuf);
-						}
-
-					} else if (!pass) {
-						//add message to the messageList
-						if (!bluetooth.messages.Contains (data)) {
-							bluetooth.messages.Add (data);
-
-							//send the message to all- flooding :)
-							bluetooth.SendMessages (readBuf);
-							// remove player from list of people who haven't played
-
-
-							string[] players = Array.ConvertAll<object, string>( bluetooth.playersNotPlayed.ToArray(), x => x.ToString());
-							string player = players [number];
-							bluetooth.playersNotPlayed.Remove(player);
-							if (player == bluetooth.DeviceName) {
-								// TODO MAKE MOVE HERE
-								bluetooth.makeMove();
-
-							} else {
-							// NOT YOUR TURN
-							// IF YOU HAVE GONE, LOAD DATA
-
+									Console.WriteLine (device + "\n\t" + bluetooth.devices);
+								}
 
 							}
-						}
+							if (ans) {
+								bluetooth.SendMessages (readBuf);
+							}
 
-					} else {
+						} else if (!pass) {
+							//add message to the messageList
+							if (!bluetooth.messages.Contains (data)) {
+								bluetooth.messages.Add (data);
 
-						if (!bluetooth.randomDevices.Contains (data)) {
-							// calculate if this is the starting device
-							// add numbers to the count
-							bluetooth.randomCount++;
-							Console.WriteLine ("Random Count = " + bluetooth.randomCount);
-							bluetooth.randomTotal += number;
+								//send the message to all- flooding :)
+								bluetooth.SendMessages (readBuf);
+								// remove player from list of people who haven't played
 
-							bluetooth.randomDevices.Add (data);
+									string[] players = Array.ConvertAll<object, string> (bluetooth.playersNotPlayed.ToArray (), x => x.ToString ());
+									string player = players [number];
+									bluetooth.playersNotPlayed.Remove (player);
+									if (player == bluetooth.DeviceName) {
+										// TODO MAKE MOVE HERE
+										bluetooth.makeMove ();
 
-							//forward the message
-							bluetooth.SendMessages (readBuf);
-
-							// if all numbers have been received then find average
-							if (bluetooth.maxDevices == bluetooth.randomCount) {
-								int average = bluetooth.randomCount / bluetooth.maxDevices;
-								//TODO SORT DEVICES ? how is this sorting
-								bluetooth.DeviceNames.Sort ();
-								string[] temp = Array.ConvertAll (bluetooth.DeviceNames.ToArray (), x => x.ToString ());
-
-								// if you match, you are the first player
-								if (temp [average].Equals (bluetooth.DeviceName)) {
-									// execute turn if it is you TODO
-									// START THE GAME HERE ######################## TODO
-									// CHOOSE A RANDOM PROMPT
-
-									bluetooth.startGame ();
+									} else {
+										// NOT YOUR TURN
+										// IF YOU HAVE GONE, LOAD DATA
 
 
-								} else {
-									// you are not the first player
+
+								}
+							}
+
+						} else {
+
+							if (!bluetooth.randomDevices.Contains (data)) {
+								// calculate if this is the starting device
+								// add numbers to the count
+								bluetooth.randomCount++;
+								Console.WriteLine ("Random Count = " + bluetooth.randomCount);
+								bluetooth.randomTotal += number;
+
+								bluetooth.randomDevices.Add (data);
+
+								//forward the message
+								bluetooth.SendMessages (readBuf);
+
+								// if all numbers have been received then find average
+								if (bluetooth.maxDevices == bluetooth.randomCount) {
+									int average = bluetooth.randomCount / bluetooth.maxDevices;
+									//TODO SORT DEVICES ? how is this sorting
+									bluetooth.DeviceNames.Sort ();
+									string[] temp = Array.ConvertAll (bluetooth.DeviceNames.ToArray (), x => x.ToString ());
+
+									// if you match, you are the first player
+									if (temp [average].Equals (bluetooth.DeviceName)) {
+										// execute turn if it is you TODO
+										// START THE GAME HERE ######################## TODO
+										// CHOOSE A RANDOM PROMPT
+
+										bluetooth.startGame ();
+
+
+									} else {
+										// you are not the first player
+									}
 								}
 							}
 						}
@@ -536,23 +543,21 @@ namespace BlueNet
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
 
-					bool newPass;
-					bool newType;
-					int newNumber;
-					string newData;
+					bool newPass = true;
+					bool newType = false;
+					int newNumber = 0;
+					string newData = "";
 
 
 					string deviceName = msg.Data.GetString (DEVICE_NAME);
 					if(AddDevice(deviceName)){
 						bluetooth.directDevices++;
 
-						// send updated device list to all
-						newPass = true;
-						newType = false;
-						newData = "";
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
+
 							newData = newData + device + " ";
+
 						}
 						if (bluetooth.maxDevices != 0) {
 							newNumber = bluetooth.maxDevices;
@@ -578,16 +583,17 @@ namespace BlueNet
 			/// <param name="type">If set to <c>true</c> type.</param>
 			/// <param name="number">Number.</param>
 			/// <param name="data">Data.</param>
-			public string decode(bool pass, bool type, int number, byte[] data){
+			public string decode(bool set, bool pass, bool type, int number, byte[] data){
 
 
 
 				string temp = System.Text.Encoding.UTF8.GetString(data);
 				string[] bools = temp.Split ('*');
-				pass = System.Convert.ToBoolean(bools [0]);
-				type = System.Convert.ToBoolean(bools [1]);
-				number = Integer.ParseInt(bools [2]);
-				return bools [3];
+				set = System.Convert.ToBoolean (bools [0]);
+				pass = System.Convert.ToBoolean(bools [1]);
+				type = System.Convert.ToBoolean(bools [2]);
+				number = Integer.ParseInt(bools [3]);
+				return bools [4];
 
 			}
 			/// <summary>
@@ -598,7 +604,7 @@ namespace BlueNet
 			/// <param name="number">Number.</param>
 			/// <param name="data">Data.</param>
 			public byte[] encode(bool pass, bool type, int number, string data){
-				string temp = pass.ToString () + "*" + type.ToString () + "*" + number + "*" + data;
+				string temp = true.ToString() + "*" + pass.ToString () + "*" + type.ToString () + "*" + number + "*" + data;
 				return System.Text.Encoding.UTF8.GetBytes (temp);
 			}
 
