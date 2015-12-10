@@ -477,8 +477,10 @@ namespace BlueNet
 
 						foreach (string device in devices) {
 							// add unique devices to the list
-							AddDevice(device);
-							Console.WriteLine (device + "\n\t" + bluetooth.devices);
+							if (AddDevice (device)) {
+								Console.WriteLine (device + "\n\t" + bluetooth.devices);
+								bluetooth.SendMessages (readBuf);
+							}
 						}
 
 					} else if (!pass) {
