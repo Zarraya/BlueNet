@@ -474,11 +474,13 @@ namespace BlueNet
 						}
 						//ByteArrayToString(
 						string[] devices = data.Split(' ');
-
+					
 						foreach (string device in devices) {
 							// add unique devices to the list
 							AddDevice(device);
 							Console.WriteLine (device + "\n\t" + bluetooth.devices);
+
+							Console.Write (device + " ");
 						}
 
 					} else if (!pass) {
