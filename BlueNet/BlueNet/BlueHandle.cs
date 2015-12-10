@@ -248,22 +248,6 @@ namespace BlueNet
 
 
 
-		/// <summary>
-		/// Determines whether this instance has messages the specified readBuf.
-		/// </summary>
-		/// <returns><c>true</c> if this instance has messages the specified readBuf; otherwise, <c>false</c>.</returns>
-		/// <param name="readBuf">Read buffer.</param>
-		private bool HasMessages(string str){
-			foreach (string temp in messages) {
-				if (temp.Equals(str)){
-					return true;
-				}
-			}
-			return false;
-		}
-
-
-
 
 		/// <summary>
 		/// Devices the found.
@@ -494,7 +478,9 @@ namespace BlueNet
 
 					} else if (!pass) {
 						//add message to the messageList
-						if (ProcessMessage (data)) {
+						if (!bluetooth.messages.Contains (data)) {
+								bluetooth.messages.Add (data);
+
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
@@ -619,23 +605,6 @@ namespace BlueNet
 				string temp = pass.ToString () + "*" + type.ToString () + "*" + number + "*" + data;
 				return System.Text.Encoding.UTF8.GetBytes (temp);
 			}
-
-
-
-			/// <summary>
-			/// Processes the message.
-			/// </summary>
-			/// <returns><c>true</c>, if message was new, <c>false</c> otherwise.</returns>
-			/// <param name="message">Message.</param>
-			public bool ProcessMessage(string message){
-				if (!bluetooth.HasMessages (message)) {
-					bluetooth.messages.Add (message);
-
-					return true;
-				}
-				return false;
-			}
-
 
 
 
