@@ -441,24 +441,20 @@ namespace BlueNet
 //
 //
 //					}
-					bool set = false;
-					bool pass = true;
-					bool type = true;
-					int number = 0;
-					string data = "";
+					MessageStruct message = new MessageStruct();
 
 
-					data = decode (set, pass, type, number, readBuf);
+					message = decode (readBuf);
 
-					if (set) {
-						if (pass && !type) {
+					if (message.SetBit) {
+						if (message.Pass && !message.Type) {
 							//get devices
 							// decode byte[] for device names
-							if (number != 0) {
+							if (message.Number != 0) {
 								bluetooth.maxDevices = number;
 							}
 							//ByteArrayToString(
-							string[] devices = data.Split (' ');
+							string[] devices = message.Data.Split (' ');
 					
 							bool ans = false;
 
@@ -476,17 +472,17 @@ namespace BlueNet
 								bluetooth.SendMessages (readBuf);
 							}
 
-						} else if (!pass) {
+						} else if (!message.Pass) {
 							//add message to the messageList
-							if (!bluetooth.messages.Contains (data)) {
-								bluetooth.messages.Add (data);
+							if (!bluetooth.messages.Contains (message.Data)) {
+								bluetooth.messages.Add (message.Data);
 
 								//send the message to all- flooding :)
 								bluetooth.SendMessages (readBuf);
 								// remove player from list of people who haven't played
 
 									string[] players = Array.ConvertAll<object, string> (bluetooth.playersNotPlayed.ToArray (), x => x.ToString ());
-									string player = players [number];
+									string player = players [message.Number];
 									bluetooth.playersNotPlayed.Remove (player);
 									if (player == bluetooth.DeviceName) {
 										// TODO MAKE MOVE HERE
@@ -508,9 +504,9 @@ namespace BlueNet
 								// add numbers to the count
 								bluetooth.randomCount++;
 								Console.WriteLine ("Random Count = " + bluetooth.randomCount);
-								bluetooth.randomTotal += number;
+								bluetooth.randomTotal += message.Number;
 
-								bluetooth.randomDevices.Add (data);
+								bluetooth.randomDevices.Add (message.Data);
 
 								//forward the message
 								bluetooth.SendMessages (readBuf);
@@ -543,10 +539,11 @@ namespace BlueNet
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
 
-					bool newPass = true;
-					bool newType = false;
-					int newNumber = 0;
-					string newData = "";
+					MessageStruct temp = new MessageStruct();
+					temp.Pass = true;
+					temp.Type = false;
+					temp.Number = 0;
+					temp.Data = "";
 
 
 					string deviceName = msg.Data.GetString (DEVICE_NAME);
@@ -556,17 +553,17 @@ namespace BlueNet
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
 
-							newData = newData + device + " ";
+							temp.Data = temp.Data + device + " ";
 
 						}
 						if (bluetooth.maxDevices != 0) {
-							newNumber = bluetooth.maxDevices;
+							temp.Number = bluetooth.maxDevices;
 						} else {
-							newNumber = 0;
+							temp.Number = 0;
 						}
 
 						// sends the devices out to all devices
-						byte[] byteMessage = encode(newPass, newType, newNumber, newData);
+						byte[] byteMessage = encode(temp);
 						bluetooth.SendMessages (byteMessage);
 
 					}
@@ -583,17 +580,18 @@ namespace BlueNet
 			/// <param name="type">If set to <c>true</c> type.</param>
 			/// <param name="number">Number.</param>
 			/// <param name="data">Data.</param>
-			public string decode(bool set, bool pass, bool type, int number, byte[] data){
+			public MessageStruct decode(byte[] data){
 
 
-
+				MessageStruct str = new MessageStruct ();
 				string temp = System.Text.Encoding.UTF8.GetString(data);
 				string[] bools = temp.Split ('*');
-				set = System.Convert.ToBoolean (bools [0]);
-				pass = System.Convert.ToBoolean(bools [1]);
-				type = System.Convert.ToBoolean(bools [2]);
-				number = Integer.ParseInt(bools [3]);
-				return bools [4];
+				str.SetBit = System.Convert.ToBoolean (bools [0]);
+				str.Pass = System.Convert.ToBoolean(bools [1]);
+				str.Type = System.Convert.ToBoolean(bools [2]);
+				str.Number = Integer.ParseInt(bools [3]);
+				str.Data = bools [4];
+				return str;
 
 			}
 			/// <summary>
@@ -603,8 +601,9 @@ namespace BlueNet
 			/// <param name="type">If set to <c>true</c> type.</param>
 			/// <param name="number">Number.</param>
 			/// <param name="data">Data.</param>
-			public byte[] encode(bool pass, bool type, int number, string data){
-				string temp = true.ToString() + "*" + pass.ToString () + "*" + type.ToString () + "*" + number + "*" + data;
+			public byte[] encode(MessageStruct str){
+				
+				string temp = true.ToString() + "*" + str.Pass.ToString () + "*" + str.Type.ToString () + "*" + str.Number + "*" + str.Data;
 				return System.Text.Encoding.UTF8.GetBytes (temp);
 			}
 
@@ -624,6 +623,7 @@ namespace BlueNet
 					Console.WriteLine (device);
 					if((bluetooth.devices == bluetooth.maxDevices) && (bluetooth.maxDevices != 0)){
 						// send random number to decide who goes first
+						Console.WriteLine("Starting sendStart()");
 						sendStart();
 					}
 					return true;
