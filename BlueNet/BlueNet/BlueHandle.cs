@@ -372,7 +372,7 @@ namespace BlueNet
 
 				doneButt.Click+= (object sender, EventArgs e) => {
 
-
+					MessageStruct str = new MessageStruct();
 
 					messages.Add(text.Text);
 					messagesViewAdapter.Add(text.Text);
