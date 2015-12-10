@@ -4,19 +4,19 @@ using ProtoBuf;
 
 namespace BlueNet
 {
-	//[Serializable]
-	[ProtoContract]
+	[Serializable]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct MessageStruct
 	{
 		//const int ARRAY_SIZE = 100000000;
-		[ProtoMemberAttribute(3)]
+
 		bool pass;
-		[ProtoMemberAttribute(4)]
+
 		bool type;
-		[ProtoMemberAttribute(5)]
+
 		int number;
-		//[MarshalAs(UnmanagedType.ByValArray, SizeConst = ARRAY_SIZE)]
-		[ProtoMemberAttribute(6)]
+
+		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 100000000)]
 		byte[] data;
 
 		public int Number {
