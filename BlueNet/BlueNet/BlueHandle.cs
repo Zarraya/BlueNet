@@ -359,18 +359,18 @@ namespace BlueNet
 
 					image = dt.done();
 
-					MessageStruct message = new MessageStruct();
-					message.Data = "Image Sent";
-					message.Number = 0;
-					message.Pass = false;
+					//MessageStruct message = new MessageStruct();
+					//message.Data = "Image Sent";
+					//message.Number = 0;
+					//message.Pass = false;
 
-					messages.Add(message);
+					//messages.Add(message);
 
 					//byte[] temp = MyHandler.RawSerialize(message);
 
 					//SendMessages(temp);
 
-					messagesViewAdapter.Add(message.Data);
+					//messagesViewAdapter.Add(message.Data);
 
 					SetContentView(Resource.Layout.GameView);
 				};
@@ -387,13 +387,13 @@ namespace BlueNet
 
 				doneButt.Click+= (object sender, EventArgs e) => {
 
-					MessageStruct message = new MessageStruct();
-					message.Data = text.Text;
-					message.Number = 0;
-					message.Pass = false;
+					//MessageStruct message = new MessageStruct();
+					//message.Data = text.Text;
+					//message.Number = 0;
+					//message.Pass = false;
 
-					messages.Add(message);
-					messagesViewAdapter.Add(message.Data);
+					//messages.Add(message);
+					//messagesViewAdapter.Add(message.Data);
 
 					//byte[] temp = MyHandler.RawSerialize(message);
 
@@ -459,9 +459,9 @@ namespace BlueNet
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
-					bool pass;
-					bool type;
-					int number;
+					bool pass = true;
+					bool type = true;
+					int number = 0;
 					string data;
 
 
@@ -580,9 +580,9 @@ namespace BlueNet
 			/// <param name="data">Data.</param>
 			public string decode(bool pass, bool type, int number, byte[] data){
 				string temp = System.Text.Encoding.UTF8.GetString(data);
-				string[] bools = temp.Split ('*', 4);
-				pass = (bool) bools [0];
-				type = (bool) bools [1];
+				string[] bools = temp.Split ('*');
+				pass = System.Convert.ToBoolean(bools [0]);
+				type = System.Convert.ToBoolean(bools [1]);
 				number = Integer.ParseInt(bools [2]);
 				return bools [3];
 

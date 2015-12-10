@@ -19,40 +19,7 @@ namespace BlueNet
 		[MarshalAs(UnmanagedType.LPStr, SizeConst = 50)]
 		byte[] data;
 
-		public int Number {
-			get {
-				return number;
-			}
-			set{
-				number = value;
-			}
-		}
 
-		public bool Pass {
-			get {
-				return pass;
-			}
-			set{ 
-				pass = value;
-			}
-		}
-
-		public string Data {
-			get {
-				return data;
-			}
-			set{ data = value;}
-		}
-
-		public bool Type {
-			get {
-				return type;
-			}
-			set {
-				type = value;
-			}
-				
-		}
 	}
 }
 
