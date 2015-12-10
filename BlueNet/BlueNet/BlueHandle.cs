@@ -478,6 +478,7 @@ namespace BlueNet
 						foreach (string device in devices) {
 							// add unique devices to the list
 							AddDevice(device);
+							Console.WriteLine (device + "\n\t" + bluetooth.devices);
 						}
 
 					} else if (!pass) {
@@ -507,6 +508,7 @@ namespace BlueNet
 						// calculate if this is the starting device
 						// add numbers to the count
 						bluetooth.randomCount++;
+						Console.WriteLine ("Random Count = " + bluetooth.randomCount);
 						bluetooth.randomTotal += number;
 
 						// if all numbers have been received then find average
