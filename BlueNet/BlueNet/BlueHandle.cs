@@ -74,11 +74,6 @@ namespace BlueNet
 			DeviceName = bluetoothAdapter.Name;
 			handle = new MyHandler (this);
 
-			if(!bluetoothAdapter.IsEnabled){
-
-				Intent enableIntent = new Intent (BluetoothAdapter.ActionRequestEnable);
-				StartActivityForResult (enableIntent, 1);
-			}
 
 			// If the adapter is null, then Bluetooth is not supported
 			if (bluetoothAdapter == null) {
@@ -125,9 +120,7 @@ namespace BlueNet
 						maxDevices = Integer.ParseInt(number.Text.ToString());
 
 						//enable discoverability for ever
-						Intent discoverIntent = new Intent(BluetoothAdapter.ActionRequestDiscoverable);
-						discoverIntent.PutExtra(BluetoothAdapter.ExtraDiscoverableDuration, 0);
-						StartActivity(discoverIntent);
+						EnsureDiscoverable();
 
 						SetContentView(Resource.Layout.WaitView);
 					};
@@ -159,7 +152,8 @@ namespace BlueNet
 			base.OnStart ();
 
 			// If BT is not on, request that it be enabled.
-			// setupChat() will then be called during onActivityResult
+			// will then be called during onActivityResult
+			// TODO maybe put in onCreate()
 			if (!bluetoothAdapter.IsEnabled) {
 				Intent enableIntent = new Intent (BluetoothAdapter.ActionRequestEnable);
 				StartActivityForResult (enableIntent, REQUEST_ENABLE_BT);
@@ -207,7 +201,7 @@ namespace BlueNet
 		{
 			if (bluetoothAdapter.ScanMode != ScanMode.ConnectableDiscoverable) {
 				Intent discoverableIntent = new Intent (BluetoothAdapter.ActionRequestDiscoverable);
-				discoverableIntent.PutExtra (BluetoothAdapter.ExtraDiscoverableDuration, 300);
+				discoverableIntent.PutExtra (BluetoothAdapter.ExtraDiscoverableDuration, 0);
 				StartActivity (discoverableIntent);
 			}
 		}
@@ -394,7 +388,9 @@ namespace BlueNet
 
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
-					if(AddDevice(msg.Data.GetString (DEVICE_NAME))){
+					// POTENTIAL PROBLEM TODO
+					string temp1 = msg.Data.GetString (DEVICE_NAME);
+					if(AddDevice(temp1)){
 						bluetooth.directDevices++;
 
 						// send updated device list to all
@@ -446,13 +442,13 @@ namespace BlueNet
 			/// <returns><c>true</c>, if device was added, <c>false</c> otherwise.</returns>
 			/// <param name="device">Device.</param>
 			public bool AddDevice(string device){
-				if (!bluetooth.DeviceFound (device)) {
+				if (!bluetooth.DeviceNames.Contains(device)) {
 					bluetooth.DeviceNames.Add (device);
 					bluetooth.devices++;
 					Toast.MakeText (Application.Context, "Connected to " + device, ToastLength.Short).Show ();
 
 
-					if(bluetooth.devices == bluetooth.maxDevices && bluetooth.maxDevices != 0){
+					if((bluetooth.devices == bluetooth.maxDevices) && (bluetooth.maxDevices != 0)){
 						// send random number to decide who goes first
 						sendStart();
 					}
@@ -600,7 +596,7 @@ namespace BlueNet
 				// When the request to enable Bluetooth returns
 				if (resultCode == Result.Ok) {
 					// Bluetooth is now enabled, so set up service
-					service = new BluetoothChatService (this, new MyHandler (this));
+					service = new BluetoothChatService (this, handle);
 				} else {
 				
 					// User did not enable Bluetooth or an error occured
