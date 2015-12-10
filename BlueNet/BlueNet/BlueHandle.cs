@@ -301,8 +301,8 @@ namespace BlueNet
 					byte[] writeBuf = (byte[])msg.Obj;
 
 					// put the message in the messageList
-					if (!bluetooth.HasMessages (Decode(writeBuf))) {
-						bluetooth.messages.Add (Decode(writeBuf));
+					if (!bluetooth.HasMessages (RawDeserialize(writeBuf))) {
+						bluetooth.messages.Add (RawDeserialize(writeBuf));
 					}
 
 					break;
@@ -310,7 +310,7 @@ namespace BlueNet
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
-					MessageStruct message = Decode (readBuf);
+					MessageStruct message = RawDeserialize (readBuf);
 					if (message.Pass && !message.Type) {
 						//get devices
 						// decode byte[] for device names
@@ -331,7 +331,10 @@ namespace BlueNet
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
-							string player = bluetooth.playersNotPlayed.ToArray[message.Number];
+
+
+							string[] players = bluetooth.playersNotPlayed.ToArray;
+							string player = players [message.Number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
 								// TODO MAKE MOVE HERE
@@ -354,7 +357,7 @@ namespace BlueNet
 						// if all numbers have been received then find average
 						if(bluetooth.maxDevices == bluetooth.randomCount){
 							int average = bluetooth.randomCount / bluetooth.maxDevices;
-							//TODO SORT DEVICES
+							//TODO SORT DEVICES ? how is this sorting
 							bluetooth.DeviceNames.Sort();
 							string[] temp = (string[]) bluetooth.DeviceNames.ToArray ();
 
@@ -391,9 +394,12 @@ namespace BlueNet
 						newMessage.Data = StringToByteArray(temp);
 						if (bluetooth.maxDevices != 0) {
 							newMessage.Number = bluetooth.maxDevices;
+						} else {
+							newMessage.Number = 0;
 						}
+
 						// sends the devices out to all devices
-						byte[] byteMessage = Encode (newMessage);
+						byte[] byteMessage = RawSerialize (newMessage);
 						bluetooth.SendMessages (byteMessage);
 
 					}
@@ -448,12 +454,37 @@ namespace BlueNet
 				newMessage.Number = rand.Next (1, bluetooth.maxDevices);
 				newMessage.Type = true;
 				newMessage.Pass = true;
-				byte[] temp = Encode (newMessage);
+				byte[] temp = RawSerialize (newMessage);
 				bluetooth.SendMessages (temp);
 
 				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
 			}
 
+			//found online
+			public static byte[] RawSerialize( object anything )
+			{
+				int rawSize = Marshal.SizeOf( anything );
+				IntPtr buffer = Marshal.AllocHGlobal( rawSize );
+				Marshal.StructureToPtr( anything, buffer, false );
+				byte[] rawDatas = new byte[ rawSize ];
+				Marshal.Copy( buffer, rawDatas, 0, rawSize );
+				Marshal.FreeHGlobal( buffer );
+				return rawDatas;
+			}
+
+			// found online
+			public static object RawDeserialize( byte[] rawData, int position, Type
+				anyType )
+			{
+				int rawsize = Marshal.SizeOf( anyType );
+				if( rawsize > rawData.Length )
+					return null;
+				IntPtr buffer = Marshal.AllocHGlobal( rawsize );
+				Marshal.Copy( rawData, position, buffer, rawsize );
+				object retobj = Marshal.PtrToStructure( buffer, anyType );
+				Marshal.FreeHGlobal( buffer );
+				return retobj;
+			}
 
 			/// <summary>
 			/// Decode the specified message.
