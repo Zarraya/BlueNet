@@ -494,7 +494,7 @@ namespace BlueNet
 
 					} else if (!pass) {
 						//add message to the messageList
-						if (!ProcessMessage (data)) {
+						if (ProcessMessage (data)) {
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
