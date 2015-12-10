@@ -28,6 +28,7 @@ namespace BlueNet
 		private int directDevices = 0;
 		private int randomCount;
 		private int randomTotal;
+		public string DeviceName;
 
 		// Debugging
 		private const string TAG = "BluetoothChat";
@@ -53,6 +54,7 @@ namespace BlueNet
 
 		// Names of connected devices
 		protected ArrayList DeviceNames = new ArrayList();
+		private ArrayList playersNotPlayed = new ArrayList ();
 
 		// Bluetooth Adapter
 		private BluetoothAdapter bluetoothAdapter = null;
@@ -66,7 +68,7 @@ namespace BlueNet
 			//Initialization
 			// Get local Bluetooth adapter
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-
+			DeviceName = bluetoothAdapter.Name;
 
 			if(!bluetoothAdapter.IsEnabled){
 
@@ -294,12 +296,20 @@ namespace BlueNet
 
 					} else if (!message.Pass) {
 						//add message to the messageList
-						if (!bluetooth.HasMessages (message)) {
-							bluetooth.messages.Add (message);
-
+						if (ProcessMessage (message)) {
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
+							// remove player from list of people who haven't played
+							string player = bluetooth.playersNotPlayed.ToArray()[message.Number];
+							bluetooth.playersNotPlayed.Remove(player);
+							if (player == bluetooth.DeviceName) {
+								// TODO MAKE MOVE HERE
+							} else {
+							// NOT YOUR TURN
+							// IF YOU HAVE GONE, LOAD DATA
+							}
 						}
+
 					} else {
 						// calculate if this is the starting device
 						// add numbers to the count
@@ -312,12 +322,15 @@ namespace BlueNet
 							//TODO SORT DEVICES
 							bluetooth.DeviceNames.Sort();
 							string[] temp = (string[]) bluetooth.DeviceNames.ToArray ();
-							// gets the name of the device
-							string device = bluetooth.bluetoothAdapter.Name;
 
-							if(temp[average] == device){
+							// if you match, you are the first player
+							if (temp [average] == bluetooth.DeviceName) {
 								// execute turn if it is you TODO
-								// START THE TURN HERE ######################## TODO
+								// START THE GAME HERE ######################## TODO
+								// CHOOSE A RANDOM PROMPT
+
+							} else {
+							// you are not the first player
 							}
 						}
 					}
@@ -352,6 +365,20 @@ namespace BlueNet
 					break;					
 				}
 			}
+
+			/// <summary>
+			/// Processes the message.
+			/// </summary>
+			/// <returns><c>true</c>, if message was new, <c>false</c> otherwise.</returns>
+			/// <param name="message">Message.</param>
+			public bool ProcessMessage(MessageStruct message){
+				if (!bluetooth.HasMessages (message)) {
+					bluetooth.messages.Add (message);
+
+					return true;
+				}
+				return false;
+			}
 			/// <summary>
 			/// Adds the device.and updates text for devices connected to
 			/// </summary>
@@ -385,6 +412,8 @@ namespace BlueNet
 				newMessage.Pass = true;
 				byte[] temp = Encode (newMessage);
 				bluetooth.SendMessages (temp);
+
+				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
 			}
 
 
