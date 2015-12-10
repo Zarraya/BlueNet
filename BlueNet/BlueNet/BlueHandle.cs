@@ -461,26 +461,26 @@ namespace BlueNet
 						//ByteArrayToString(
 						string[] devices = data.Split(' ');
 					
+						bool ans = false;
+
 						foreach (string device in devices) {
 							// add unique devices to the list
-							bool ans = false;
 							if(AddDevice(device)){
 								//forward devices
 								ans = true;
 
 								Console.WriteLine (device + "\n\t" + bluetooth.devices);
+							}
 
-								Console.Write (device + " ");
-							}
-							if (ans) {
-								bluetooth.SendMessages (readBuf);
-							}
+						}
+						if (ans) {
+							bluetooth.SendMessages (readBuf);
 						}
 
 					} else if (!pass) {
 						//add message to the messageList
 						if (!bluetooth.messages.Contains (data)) {
-								bluetooth.messages.Add (data);
+							bluetooth.messages.Add (data);
 
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
