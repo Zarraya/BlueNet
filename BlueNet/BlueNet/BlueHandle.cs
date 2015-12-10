@@ -74,7 +74,7 @@ namespace BlueNet
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			DeviceName = bluetoothAdapter.Name;
 			handle = new MyHandler (this);
-			messagesViewAdapter = new ArrayAdapter<string>(this, Resource.Layout.message, (string[])messageContents.ToArray());
+			//messagesViewAdapter = new ArrayAdapter<string>(this, Resource.Layout.message, (string[])messageContents.ToArray());
 
 
 			// If the adapter is null, then Bluetooth is not supported
@@ -159,11 +159,20 @@ namespace BlueNet
 			if (!bluetoothAdapter.IsEnabled) {
 				Intent enableIntent = new Intent (BluetoothAdapter.ActionRequestEnable);
 				StartActivityForResult (enableIntent, REQUEST_ENABLE_BT);
+
 				// Otherwise, setup the chat session
-			} else {
-				if (service == null)
+			} else 
+				if (service == null){
 					// Initialize the BluetoothChatService to perform bluetooth connections
-					service = new BluetoothChatService (this, handle);			}
+					service = new BluetoothChatService (this, handle);
+					//TODO MAYBE?
+					for(int index = 0; index < BluetoothChatService.SIZE; index++){
+						if (service.GetState (index) == BluetoothChatService.STATE_NONE) {
+							// Start the Bluetooth chat services
+							service.Start (index);
+						}
+					}
+			}
 		}
 
 		protected override void OnResume ()
