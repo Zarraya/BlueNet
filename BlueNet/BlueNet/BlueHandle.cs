@@ -29,6 +29,7 @@ namespace BlueNet
 		private int randomCount;
 		private int randomTotal;
 		public string DeviceName;
+		public bool turn = false;
 
 		// Debugging
 		private const string TAG = "BluetoothChat";
@@ -235,6 +236,36 @@ namespace BlueNet
 			return false;
 		}
 
+		public void startGame(){
+
+			SetContentView(Resource.Layout.GameView);
+
+			Button subButt = FindViewById<Button> (Resource.Id.subButton);
+
+
+			if (!turn) {
+
+				subButt.Enabled = false;
+			}
+		}
+
+		public void makeMove(){
+
+			if (messages.Count % 2 == 0) {
+
+
+			} else {
+
+				Button doneButt = FindViewById<Button> (Resource.Id.subButton);
+				EditText text = FindViewById<EditText> (Resource.Id.messageEntry);
+
+				doneButt.Click+= (object sender, EventArgs e) => {
+
+
+				};
+			}
+		}
+
 		// The Handler that gets information back from the BluetoothChatService
 		private class MyHandler : Handler
 		{
@@ -300,13 +331,17 @@ namespace BlueNet
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
-							string player = bluetooth.playersNotPlayed.ToArray()[message.Number];
+							string player = bluetooth.playersNotPlayed.ToArray[message.Number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
 								// TODO MAKE MOVE HERE
+								bluetooth.makeMove();
+
 							} else {
 							// NOT YOUR TURN
 							// IF YOU HAVE GONE, LOAD DATA
+
+
 							}
 						}
 
@@ -328,6 +363,9 @@ namespace BlueNet
 								// execute turn if it is you TODO
 								// START THE GAME HERE ######################## TODO
 								// CHOOSE A RANDOM PROMPT
+
+								bluetooth.startGame();
+
 
 							} else {
 							// you are not the first player

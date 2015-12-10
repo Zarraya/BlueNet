@@ -59,6 +59,7 @@
     <Compile Include="MessageStruct.cs" />
     <Compile Include="SplashActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="GameActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -90,5 +91,6 @@
     <AndroidResource Include="Resources\menu\option_menu.xml" />
     <AndroidResource Include="Resources\values\Styles.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
+    <AndroidResource Include="Resources\layout\GameView.axml" />
   </ItemGroup>
 </Project>
