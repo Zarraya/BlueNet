@@ -31,3 +31,4 @@
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/uploadflags.txt
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/BlueNet.dll
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/BlueNet.dll.mdb
+/Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/protobuf-net.dll

@@ -10,6 +10,8 @@ using Android.Widget;
 using Java.Lang;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.IO;
+using ProtoBuf;
 
 namespace BlueNet
 {
@@ -405,13 +407,28 @@ namespace BlueNet
 			/// </summary>
 			/// <param name="message">Message.</param>
 			public byte[] Encode (MessageStruct message){
-				int size = Marshal.SizeOf (message);
-				byte[] array = new byte[size];
-				IntPtr pointer = Marshal.AllocHGlobal (size);
-				Marshal.StructureToPtr (message, pointer, true);
-				Marshal.Copy (pointer, array, 0, size);
-				Marshal.FreeHGlobal (pointer);
-				return array;
+//				int size = Marshal.SizeOf (message);
+//				byte[] array = new byte[size];
+//				IntPtr pointer = Marshal.AllocHGlobal (size);
+//				Marshal.StructureToPtr (message, pointer, false);
+//				Marshal.Copy (pointer, array, 0, size);
+//				Marshal.FreeHGlobal (pointer);
+//				return array;
+//				System.Collections.ArrayList temp;
+				byte[] temp;
+				using (var ms = new MemoryStream ()) {
+
+					Serializer.Serialize (ms, message);
+
+					temp = ms.ToArray ();
+				}
+
+				foreach (byte b in temp) {
+
+					Console.WriteLine (b);
+				}
+
+				return temp;
 			}
 
 			/// <summary>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.triverticy.bluenet">
+  <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" />
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+  <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <application android:allowBackup="true" android:label="@string/app_name" android:icon="@drawable/bmn_icon" android:name="mono.android.app.Application" android:debuggable="true">
+    <activity android:theme="@style/Theme.Main" android:name="md559026b153b63155c1a6e4f33fc46bf14.BlueHandle" />
+    <activity android:configChanges="keyboardHidden|orientation" android:label="@string/select_device" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" android:name="md559026b153b63155c1a6e4f33fc46bf14.DeviceListActivity" />
+    <activity android:noHistory="true" android:theme="@style/Theme.Splash" android:name="md5f2f4d8a71a5b81d3105d911886877eea.SplashActivity" />
+    <provider android:name="mono.MonoRuntimeProvider" android:exported="false" android:initOrder="2147483647" android:authorities="com.triverticy.bluenet.mono.MonoRuntimeProvider.__mono_init__" />
+    <!--suppress ExportedReceiver-->
+    <receiver android:name="mono.android.Seppuku">
+      <intent-filter>
+        <action android:name="mono.android.intent.action.SEPPUKU" />
+        <category android:name="mono.android.intent.category.SEPPUKU.com.triverticy.bluenet" />
+      </intent-filter>
+    </receiver>
+    <activity android:noHistory="true" android:theme="@style/Mono.Android.Theme.Splash" android:name="com.triverticy.bluenet.TrialSplashScreen">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>
