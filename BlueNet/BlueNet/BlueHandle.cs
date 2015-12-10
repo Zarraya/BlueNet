@@ -440,7 +440,7 @@ namespace BlueNet
 					bool pass = true;
 					bool type = true;
 					int number = 0;
-					string data;
+					string data = "";
 
 
 					data = decode(pass, type, number, readBuf);
