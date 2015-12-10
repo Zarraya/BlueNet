@@ -30,7 +30,8 @@ namespace BlueNet
 		private int randomTotal;
 		public string DeviceName;
 		public bool turn = false;
-		public ArrayAdapter messagesViewAdapter;
+		public ArrayList messageContents = new ArrayList ();
+		public ArrayAdapter<string> messagesViewAdapter;
 		private MyHandler handle;
 
 		// Debugging
@@ -73,6 +74,7 @@ namespace BlueNet
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			DeviceName = bluetoothAdapter.Name;
 			handle = new MyHandler (this);
+			messagesViewAdapter = new ArrayAdapter<string>(this, Resource.Layout.message, (string[])messageContents.ToArray());
 
 
 			// If the adapter is null, then Bluetooth is not supported
@@ -239,16 +241,25 @@ namespace BlueNet
 
 			Button subButt = FindViewById<Button> (Resource.Id.subButton);
 
+			Random rnd = new Random();
 
-			if (!turn) {
+			string[] prompts = new string[] {" dna","n atom"," beaker"," magnet"," planet"," space"," microscope"," telescope"," lightbulb"," math compas"," gravity"," pi"," solar system"," cylinder"," safety goggles"," chemistry"," protein","n orbit"," rocket","n acid"," cell"," fungus"," battery"," sunlight"," testtube"," brain"," frequenycy"," sound waves"," cephalopod"};
 
-				subButt.Enabled = false;
-			}
+			int randInt = rnd.Next(0, prompts.Length);
+
+			messageContents.Add (prompts [randInt]);
+
+//			if (!turn) {
+//
+//				subButt.Enabled = false;
+//			}
+
+			makeMove ();
 		}
 
 		public void makeMove(){
 
-			if (messages.Count % 2 == 0) {
+			if (messages.Count % 2 == 1) {
 
 				Android.Graphics.Bitmap image;
 
@@ -310,6 +321,8 @@ namespace BlueNet
 
 					SendMessages(temp);
 
+					messageContents.Add(message.Data);
+
 					SetContentView(Resource.Layout.GameView);
 				};
 
@@ -331,6 +344,7 @@ namespace BlueNet
 					message.Pass = false;
 
 					messages.Add(message);
+					messageContents.Add(message.Data);
 
 					byte[] temp = MyHandler.RawSerialize(message);
 
