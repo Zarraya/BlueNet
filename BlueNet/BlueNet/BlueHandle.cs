@@ -536,24 +536,19 @@ namespace BlueNet
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
 
-					bool newPass;
-					bool newType;
-					int newNumber;
-					string newData;
+					bool newPass = true;
+					bool newType = false;
+					int newNumber = 0;
+					string newData = "";
 
 
 					string deviceName = msg.Data.GetString (DEVICE_NAME);
 					if(AddDevice(deviceName)){
 						bluetooth.directDevices++;
 
-						// send updated device list to all
-						newPass = true;
-						newType = false;
-						newData = "";
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
-							newData += device;
-							newData += " ";
+							newData = newData + " " + device;
 						}
 						if (bluetooth.maxDevices != 0) {
 							newNumber = bluetooth.maxDevices;
