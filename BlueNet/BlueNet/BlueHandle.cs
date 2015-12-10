@@ -543,11 +543,11 @@ namespace BlueNet
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
 
-					MessageStruct temp = new MessageStruct();
-					temp.Pass = true;
-					temp.Type = false;
-					temp.Number = 0;
-					temp.Data = "";
+					MessageStruct tempStruct = new MessageStruct();
+					tempStruct.Pass = true;
+					tempStruct.Type = false;
+					tempStruct.Number = 0;
+					tempStruct.Data = "";
 
 
 					string deviceName = msg.Data.GetString (DEVICE_NAME);
@@ -557,17 +557,17 @@ namespace BlueNet
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
 
-							temp.Data = temp.Data + device + " ";
+							tempStruct.Data = tempStruct.Data + device + " ";
 
 						}
 						if (bluetooth.maxDevices != 0) {
-							temp.Number = bluetooth.maxDevices;
+							tempStruct.Number = bluetooth.maxDevices;
 						} else {
-							temp.Number = 0;
+							tempStruct.Number = 0;
 						}
 
 						// sends the devices out to all devices
-						byte[] byteMessage = encode(temp);
+						byte[] byteMessage = encode(tempStruct);
 						bluetooth.SendMessages (byteMessage);
 
 					}
