@@ -478,19 +478,23 @@ namespace BlueNet
 					
 						foreach (string device in devices) {
 							// add unique devices to the list
+							bool ans = false;
 							if(AddDevice(device)){
 								//forward devices
-								bluetooth.SendMessages(readBuf);
+								ans = true;
 
 								Console.WriteLine (device + "\n\t" + bluetooth.devices);
 
 								Console.Write (device + " ");
 							}
+							if (ans) {
+								bluetooth.SendMessages (readBuf);
+							}
 						}
 
 					} else if (!pass) {
 						//add message to the messageList
-						if (ProcessMessage (data)) {
+						if (!ProcessMessage (data)) {
 							//send the message to all- flooding :)
 							bluetooth.SendMessages (readBuf);
 							// remove player from list of people who haven't played
