@@ -30,6 +30,8 @@ namespace BlueNet
 		private int randomTotal;
 		public string DeviceName;
 		public bool turn = false;
+		public ArrayAdapter messagesViewAdapter;
+		public MyHandler handle;
 
 		// Debugging
 		private const string TAG = "BluetoothChat";
@@ -70,6 +72,7 @@ namespace BlueNet
 			// Get local Bluetooth adapter
 			bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
 			DeviceName = bluetoothAdapter.Name;
+			handle = new MyHandler (this);
 
 			if(!bluetoothAdapter.IsEnabled){
 
@@ -164,7 +167,7 @@ namespace BlueNet
 			} else {
 				if (service == null)
 					// Initialize the BluetoothChatService to perform bluetooth connections
-					service = new BluetoothChatService (this, new MyHandler (this));			}
+					service = new BluetoothChatService (this, handle);			}
 		}
 
 		protected override void OnResume ()
@@ -254,6 +257,7 @@ namespace BlueNet
 			if (messages.Count % 2 == 0) {
 
 
+
 			} else {
 
 				Button doneButt = FindViewById<Button> (Resource.Id.subButton);
@@ -261,7 +265,14 @@ namespace BlueNet
 
 				doneButt.Click+= (object sender, EventArgs e) => {
 
+					MessageStruct message = new MessageStruct();
+					message.Data = text.Text;
+					message.Number = 0;
+					message.Pass = false;
 
+					byte[] temp = MyHandler.RawSerialize(message);
+
+					SendMessages(temp);
 				};
 			}
 		}
