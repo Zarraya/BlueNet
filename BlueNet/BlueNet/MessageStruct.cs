@@ -8,16 +8,12 @@ namespace BlueNet
 	[StructLayout(LayoutKind.Sequential)]
 	public struct MessageStruct
 	{
-		//const int ARRAY_SIZE = 100000000;
 
-		bool pass;
-
-		bool type;
-
-		int number;
-
-		[MarshalAs(UnmanagedType.LPStr, SizeConst = 50)]
-		byte[] data;
+		bool setBit { get; set; }
+		bool pass{ get; set; }
+		bool type{ get; set; }
+		int number{ get; set; }
+		string data{ get; set; }
 
 
 	}
