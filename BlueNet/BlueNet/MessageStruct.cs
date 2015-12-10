@@ -9,11 +9,6 @@ namespace BlueNet
 	public struct MessageStruct
 	{
 		//const int ARRAY_SIZE = 100000000;
-
-		[ProtoMemberAttribute(1)]
-		short destination;
-		[ProtoMemberAttribute(2)]
-		short source;
 		[ProtoMemberAttribute(3)]
 		bool pass;
 		[ProtoMemberAttribute(4)]

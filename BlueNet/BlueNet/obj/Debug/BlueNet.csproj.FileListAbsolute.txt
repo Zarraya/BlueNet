@@ -1,0 +1,2 @@
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Debug\BlueNet.csprojResolveAssemblyReference.cache
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Debug\BlueNet.dll
