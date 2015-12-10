@@ -28,6 +28,7 @@ namespace BlueNet
 		private int directDevices = 0;
 		private int randomCount;
 		private int randomTotal;
+		private ArrayList randomDevices = new ArrayList ();
 		public string DeviceName;
 		public bool turn = false;
 		public ArrayList messageContents = new ArrayList ();
@@ -477,10 +478,14 @@ namespace BlueNet
 					
 						foreach (string device in devices) {
 							// add unique devices to the list
-							AddDevice(device);
-							Console.WriteLine (device + "\n\t" + bluetooth.devices);
+							if(AddDevice(device)){
+								//forward devices
+								bluetooth.SendMessages(readBuf);
 
-							Console.Write (device + " ");
+								Console.WriteLine (device + "\n\t" + bluetooth.devices);
+
+								Console.Write (device + " ");
+							}
 						}
 
 					} else if (!pass) {
@@ -507,30 +512,38 @@ namespace BlueNet
 						}
 
 					} else {
-						// calculate if this is the starting device
-						// add numbers to the count
-						bluetooth.randomCount++;
-						Console.WriteLine ("Random Count = " + bluetooth.randomCount);
-						bluetooth.randomTotal += number;
 
-						// if all numbers have been received then find average
-						if(bluetooth.maxDevices == bluetooth.randomCount){
-							int average = bluetooth.randomCount / bluetooth.maxDevices;
-							//TODO SORT DEVICES ? how is this sorting
-							bluetooth.DeviceNames.Sort();
-							string[] temp = Array.ConvertAll( bluetooth.DeviceNames.ToArray (), x => x.ToString());
+						if (!bluetooth.randomDevices.Contains (data)) {
+							// calculate if this is the starting device
+							// add numbers to the count
+							bluetooth.randomCount++;
+							Console.WriteLine ("Random Count = " + bluetooth.randomCount);
+							bluetooth.randomTotal += number;
 
-							// if you match, you are the first player
-							if (temp [average].Equals(bluetooth.DeviceName)) {
-								// execute turn if it is you TODO
-								// START THE GAME HERE ######################## TODO
-								// CHOOSE A RANDOM PROMPT
+							bluetooth.randomDevices.Add (data);
 
-								bluetooth.startGame();
+							//forward the message
+							bluetooth.SendMessages (readBuf);
+
+							// if all numbers have been received then find average
+							if (bluetooth.maxDevices == bluetooth.randomCount) {
+								int average = bluetooth.randomCount / bluetooth.maxDevices;
+								//TODO SORT DEVICES ? how is this sorting
+								bluetooth.DeviceNames.Sort ();
+								string[] temp = Array.ConvertAll (bluetooth.DeviceNames.ToArray (), x => x.ToString ());
+
+								// if you match, you are the first player
+								if (temp [average].Equals (bluetooth.DeviceName)) {
+									// execute turn if it is you TODO
+									// START THE GAME HERE ######################## TODO
+									// CHOOSE A RANDOM PROMPT
+
+									bluetooth.startGame ();
 
 
-							} else {
-							// you are not the first player
+								} else {
+									// you are not the first player
+								}
 							}
 						}
 					}
@@ -660,7 +673,7 @@ namespace BlueNet
 				number = rand.Next (1, bluetooth.maxDevices);
 				type = true;
 				pass = true;
-				data = "potato";
+				data = bluetooth.DeviceName;
 
 				byte[] temp = encode(pass,type,number,data);
 				bluetooth.SendMessages (temp);
