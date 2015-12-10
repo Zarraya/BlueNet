@@ -353,7 +353,15 @@ namespace BlueNet
 
 					messages.Add(message);
 
-					SendMessages(handle.encode(true, false, 0, message));
+					MessageStruct ms = new MessageStruct();
+
+					ms.Data = message;
+					ms.Number = 0;
+					ms.Pass = false;
+					ms.Type = false;
+					ms.SetBit = true;
+
+					SendMessages(handle.encode(ms));
 
 					messagesViewAdapter.Add(message);
 
@@ -374,10 +382,16 @@ namespace BlueNet
 
 					MessageStruct str = new MessageStruct();
 
+					str.Data = text.Text;
+					str.Type = false;
+					str.Pass = false;
+					str.SetBit = true;
+					str.Number = 0;
+
 					messages.Add(text.Text);
 					messagesViewAdapter.Add(text.Text);
 
-					SendMessages(handle.encode(true, false, 0, text.Text));
+					SendMessages(handle.encode(str));
 				};
 			}
 
@@ -455,7 +469,7 @@ namespace BlueNet
 							//get devices
 							// decode byte[] for device names
 							if (message.Number != 0) {
-								bluetooth.maxDevices = number;
+								bluetooth.maxDevices = message.Number;
 							}
 							//ByteArrayToString(
 							string[] devices = message.Data.Split (' ');
@@ -503,7 +517,7 @@ namespace BlueNet
 
 						} else {
 
-							if (!bluetooth.randomDevices.Contains (data)) {
+							if (!bluetooth.randomDevices.Contains (message.Data)) {
 								// calculate if this is the starting device
 								// add numbers to the count
 								bluetooth.randomCount++;
@@ -649,12 +663,14 @@ namespace BlueNet
 
 				Random rand = new Random ();
 
-				number = rand.Next (1, bluetooth.maxDevices);
-				type = true;
-				pass = true;
-				data = bluetooth.DeviceName;
+				MessageStruct newMessage = new MessageStruct ();
 
-				byte[] temp = encode(pass,type,number,data);
+				newMessage.Number = rand.Next (1, bluetooth.maxDevices);
+				newMessage.Type = true;
+				newMessage.Pass = true;
+				newMessage.Data = bluetooth.DeviceName;
+
+				byte[] temp = encode(newMessage);
 				bluetooth.SendMessages (temp);
 
 				bluetooth.playersNotPlayed = bluetooth.DeviceNames;
