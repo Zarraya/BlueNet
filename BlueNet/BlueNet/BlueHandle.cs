@@ -31,7 +31,7 @@ namespace BlueNet
 		public string DeviceName;
 		public bool turn = false;
 		public ArrayAdapter messagesViewAdapter;
-		public MyHandler handle;
+		private MyHandler handle;
 
 		// Debugging
 		private const string TAG = "BluetoothChat";
@@ -250,6 +250,72 @@ namespace BlueNet
 
 			if (messages.Count % 2 == 0) {
 
+				Android.Graphics.Bitmap image;
+
+				LinearLayout layout = new LinearLayout (this);
+				layout.Orientation = Orientation.Vertical;
+				layout.SetBackgroundColor(Android.Graphics.Color.White);
+				LinearLayout horiLayout = new LinearLayout (this);
+				horiLayout.SetBackgroundColor(Android.Graphics.Color.SlateGray);
+				horiLayout.Orientation = Orientation.Horizontal;
+
+				Button drawButt = new Button (this);
+				drawButt.Text = "Draw";
+				horiLayout.AddView(drawButt);
+
+				Button eraseButt = new Button (this);
+				eraseButt.Text = "Erase";
+				horiLayout.AddView(eraseButt);
+
+				Button clearButt = new Button (this);
+				clearButt.Text = "Clear";
+				horiLayout.AddView(clearButt);
+
+				Button doneButt = new Button (this);
+				doneButt.Text = "Done";
+				horiLayout.AddView(doneButt);
+
+				DrawTest dt = new DrawTest(this);
+
+				layout.AddView(horiLayout);
+				layout.AddView(dt);
+
+				drawButt.Click += (object sender, EventArgs e) => {
+
+					dt.setColor(false);
+				};
+
+				eraseButt.Click += (object sender, EventArgs e) => {
+
+					dt.setColor(true);
+				};
+
+				clearButt.Click += (object sender, EventArgs e) => {
+
+					dt.clear();
+				};
+
+				doneButt.Click += (object sender, EventArgs e) => {
+
+					image = dt.done();
+
+					MessageStruct message = new MessageStruct();
+					message.Data = "Image Sent";
+					message.Number = 0;
+					message.Pass = false;
+
+					messages.Add(message);
+
+					byte[] temp = MyHandler.RawSerialize(message);
+
+					SendMessages(temp);
+
+					SetContentView(Resource.Layout.GameView);
+				};
+
+
+
+				SetContentView(layout);
 
 
 			} else {
@@ -263,6 +329,8 @@ namespace BlueNet
 					message.Data = text.Text;
 					message.Number = 0;
 					message.Pass = false;
+
+					messages.Add(message);
 
 					byte[] temp = MyHandler.RawSerialize(message);
 

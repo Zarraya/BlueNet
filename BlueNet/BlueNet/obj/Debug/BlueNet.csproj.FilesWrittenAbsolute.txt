@@ -1,8 +1,6 @@
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/MonoAndroid,Version=v4.4.AssemblyAttribute.cs
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/res/drawable/monoandroidsplash.png
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/res/values/styles.xml
-/Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/Xamarin.Insights.dll
-/Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/protobuf-net.dll
 /Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/BlueNet.dll.mdb
 /Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/BlueNet.dll
 /Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/com.triverticy.bluenet.apk
@@ -33,3 +31,5 @@
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/uploadflags.txt
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/BlueNet.dll
 /Users/austinnafziger/BN/BlueNet/BlueNet/obj/Debug/BlueNet.dll.mdb
+/Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/Xamarin.Insights.dll
+/Users/austinnafziger/BN/BlueNet/BlueNet/bin/Debug/protobuf-net.dll
