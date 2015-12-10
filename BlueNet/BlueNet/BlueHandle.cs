@@ -318,6 +318,10 @@ namespace BlueNet
 
 					break;
 					// reads the message, if it is a device list then updates device list, else updates the message list
+
+					//IF pass is true AND message is False, then we are passing device info
+					//IF pass is False, then we are processing a message
+					//IF PASS is True AND message is True, then we are starting the game
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
@@ -328,8 +332,8 @@ namespace BlueNet
 						if (message.Number != 0) {
 							bluetooth.maxDevices = message.Number;
 						}
-
-						string[] devices = ByteArrayToString(message.Data).Split(' ');
+						//ByteArrayToString(
+						string[] devices = message.Data.Split(' ');
 
 						foreach (string device in devices) {
 							// add unique devices to the list
@@ -387,6 +391,7 @@ namespace BlueNet
 						}
 					}
 					break;
+
 					// saves the device to the list of devices
 				case MESSAGE_DEVICE_NAME:
 					if(AddDevice(msg.Data.GetString (DEVICE_NAME))){
@@ -402,7 +407,8 @@ namespace BlueNet
 							temp += device;
 							temp += " ";
 						}
-						newMessage.Data = StringToByteArray(temp);
+						//StringToByteArray(temp);
+						newMessage.Data = temp;
 						if (bluetooth.maxDevices != 0) {
 							newMessage.Number = bluetooth.maxDevices;
 						} else {

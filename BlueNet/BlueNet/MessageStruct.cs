@@ -17,7 +17,7 @@ namespace BlueNet
 		int number;
 
 		[MarshalAs(UnmanagedType.ByValArray, SizeConst = 100000000)]
-		byte[] data;
+		string data;
 
 		public int Number {
 			get {
@@ -37,7 +37,7 @@ namespace BlueNet
 			}
 		}
 
-		public byte[] Data {
+		public string Data {
 			get {
 				return data;
 			}
