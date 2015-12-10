@@ -34,6 +34,7 @@ namespace BlueNet
 		public ArrayList messageContents = new ArrayList ();
 		public ArrayAdapter<string> messagesViewAdapter;
 		private MyHandler handle;
+		public ProgressDialog dialogSpin;
 
 
 
@@ -142,8 +143,9 @@ namespace BlueNet
 						//enable discoverability for ever
 						EnsureDiscoverable();
 
-						ProgressDialog dialogSpin = new ProgressDialog(this, 5);
+						dialogSpin = new ProgressDialog(this, 5);
 						dialogSpin.SetProgressStyle(ProgressDialogStyle.Spinner);
+						dialogSpin.SetMessage("Waiting for Other Devices");
 						dialogSpin.Indeterminate = true;
 
 						SetContentView(Resource.Layout.WaitView);
@@ -273,6 +275,8 @@ namespace BlueNet
 
 
 		public void startGame(){
+
+			dialogSpin.Dismiss ();
 
 			SetContentView(Resource.Layout.GameView);
 
@@ -726,7 +730,14 @@ namespace BlueNet
 				break;
 			}
 
+			dialogSpin = new ProgressDialog (this, 5);
+			dialogSpin.SetProgressStyle(ProgressDialogStyle.Spinner);
+			dialogSpin.SetMessage("Waiting for Other Devices");
+			dialogSpin.Indeterminate = true;
+
 			SetContentView (Resource.Layout.WaitView);
+
+			dialogSpin.Show ();
 		}
 
 		/// <summary>
