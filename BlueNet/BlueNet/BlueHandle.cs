@@ -301,8 +301,8 @@ namespace BlueNet
 					byte[] writeBuf = (byte[])msg.Obj;
 
 					// put the message in the messageList
-					if (!bluetooth.HasMessages (RawDeserialize(writeBuf))) {
-						bluetooth.messages.Add (RawDeserialize(writeBuf));
+					if (!bluetooth.HasMessages ((MessageStruct)RawDeserialize(writeBuf, 0, typeof(MessageStruct)))) {
+						bluetooth.messages.Add ((MessageStruct)RawDeserialize(writeBuf, 0, typeof(MessageStruct)));
 					}
 
 					break;
@@ -310,7 +310,7 @@ namespace BlueNet
 				case MESSAGE_READ:
 					byte[] readBuf = (byte[])msg.Obj;
 
-					MessageStruct message = RawDeserialize (readBuf);
+					MessageStruct message = (MessageStruct)RawDeserialize (readBuf, 0, typeof(MessageStruct));
 					if (message.Pass && !message.Type) {
 						//get devices
 						// decode byte[] for device names
@@ -333,7 +333,7 @@ namespace BlueNet
 							// remove player from list of people who haven't played
 
 
-							string[] players = bluetooth.playersNotPlayed.ToArray;
+							string[] players = (string[])bluetooth.playersNotPlayed.ToArray();
 							string player = players [message.Number];
 							bluetooth.playersNotPlayed.Remove(player);
 							if (player == bluetooth.DeviceName) {
