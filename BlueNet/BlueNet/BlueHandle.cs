@@ -451,6 +451,7 @@ namespace BlueNet
 
 
 					data = decode(pass, type, number, readBuf);
+
 					if (pass && !type) {
 						//get devices
 						// decode byte[] for device names
