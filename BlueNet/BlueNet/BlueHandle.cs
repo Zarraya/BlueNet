@@ -24,6 +24,8 @@ namespace BlueNet
 		private ArrayList messages = new ArrayList ();
 		private int devices = 0;
 		private int directDevices = 0;
+		private int randomCount;
+		private int randomTotal;
 
 		// Debugging
 		private const string TAG = "BluetoothChat";
@@ -55,8 +57,6 @@ namespace BlueNet
 		// bluetooth service
 		private BluetoothChatService service = null;
 
-		// textview for connected devices
-		TextView text;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -90,8 +90,6 @@ namespace BlueNet
 			var butt = FindViewById<Button> (Resource.Id.gameButton);
 			butt.Click += (object sender, EventArgs e) => {
 
-				text = FindViewById<TextView> (Resource.Id.deviceConnectedView);
-
 				//build a dialog to ask for a new game or an exsiting game
 				AlertDialog.Builder builder = new AlertDialog.Builder(this, 5);
 				builder.SetTitle("Start Game?");
@@ -124,7 +122,6 @@ namespace BlueNet
 						StartActivity(discoverIntent);
 
 						SetContentView(Resource.Layout.WaitView);
-						text.Text = devices + " / " + maxDevices + " Devices Connected";
 					};
 
 				});
@@ -206,14 +203,7 @@ namespace BlueNet
 				StartActivity (discoverableIntent);
 			}
 		}
-		//Functions
 
-		public int getNumDevices(){
-			return directDevices;
-		}
-		public int getTotalDevices(){
-			return devices;
-		}
 		/// <summary>
 		/// Determines whether this instance has messages the specified readBuf.
 		/// </summary>
@@ -286,7 +276,7 @@ namespace BlueNet
 					byte[] readBuf = (byte[])msg.Obj;
 
 					MessageStruct message = Decode (readBuf);
-					if (message.Pass) {
+					if (message.Pass && !message.Type) {
 						//get devices
 						// decode byte[] for device names
 						if (message.Number != 0) {
@@ -300,13 +290,33 @@ namespace BlueNet
 							AddDevice(device);
 						}
 
-					} else {
+					} else if (!message.Pass) {
 						//add message to the messageList
 						if (!bluetooth.HasMessages (message)) {
 							bluetooth.messages.Add (message);
 
 							//send the message to all- flooding :)
-							bluetooth.SendMessage (readBuf);
+							bluetooth.SendMessages (readBuf);
+						}
+					} else {
+						// calculate if this is the starting device
+						// add numbers to the count
+						bluetooth.randomCount++;
+						bluetooth.randomTotal += message.Number;
+
+						// if all numbers have been received then find average
+						if(bluetooth.maxDevices == bluetooth.randomCount){
+							int average = bluetooth.randomCount / bluetooth.maxDevices;
+							//TODO SORT DEVICES
+							bluetooth.DeviceNames.Sort();
+							string[] temp = (string[]) bluetooth.DeviceNames.ToArray ();
+							// gets the name of the device
+							string device = bluetooth.bluetoothAdapter.Name;
+
+							if(temp[average] == device){
+								// execute turn if it is you TODO
+								// START THE TURN HERE ######################## TODO
+							}
 						}
 					}
 					break;
@@ -318,6 +328,7 @@ namespace BlueNet
 						// send updated device list to all
 						MessageStruct newMessage = new MessageStruct();
 						newMessage.Pass = true;
+						newMessage.Type = false;
 						string temp = "";
 						// put the devices into a string
 						foreach (string device in bluetooth.DeviceNames) {
@@ -330,10 +341,9 @@ namespace BlueNet
 						}
 						// sends the devices out to all devices
 						byte[] byteMessage = Encode (newMessage);
-						bluetooth.SendMessage (byteMessage);
+						bluetooth.SendMessages (byteMessage);
 
 					}
-					//Toast.MakeText (Application.Context, "Connected to " + bluetoothChat.connectedDeviceName, ToastLength.Short).Show ();
 					break;
 				case MESSAGE_TOAST:
 					Toast.MakeText (Application.Context, msg.Data.GetString (TOAST), ToastLength.Short).Show ();
@@ -349,14 +359,32 @@ namespace BlueNet
 				if (!bluetooth.DeviceFound (device)) {
 					bluetooth.DeviceNames.Add (device);
 					bluetooth.devices++;
-					bluetooth.text.Text = bluetooth.devices + " / " + bluetooth.maxDevices + " Devices Connected";
+					Toast.MakeText (Application.Context, "Connected to " + device, ToastLength.Short).Show ();
 
 
-					// TODO IF devices = maxDevices START THE NEXT SEQUENCE
+					if(bluetooth.devices == bluetooth.maxDevices && bluetooth.maxDevices != 0){
+						// send random number to decide who goes first
+						sendStart();
+					}
 					return true;
 				}
 				return false;
 			}
+
+			/// <summary>
+			/// Sends the start. message with a random int, for determining who the first player is.
+			/// </summary>
+			public void sendStart(){
+				MessageStruct newMessage = new MessageStruct ();
+				Random rand = new Random ();
+
+				newMessage.Number = rand.Next (1, bluetooth.maxDevices);
+				newMessage.Type = true;
+				newMessage.Pass = true;
+				byte[] temp = Encode (newMessage);
+				bluetooth.SendMessages (temp);
+			}
+
 
 			/// <summary>
 			/// Decode the specified message.
@@ -459,7 +487,7 @@ namespace BlueNet
 		/// <param name='message'>
 		/// A array of bytes to send.
 		/// </param>
-		private void SendMessage (byte[] message)
+		private void SendMessages (byte[] message)
 		{
 			// Get the message bytes and tell the BluetoothChatService to write
 			// Floods the message to all devices

@@ -1,0 +1,10 @@
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\BlueNet.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\Mono.Android.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\mscorlib.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.Core.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.Xml.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\Xamarin.Insights.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.Runtime.Serialization.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.ServiceModel.Internals.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\android\assets\System.Net.Http.dll
