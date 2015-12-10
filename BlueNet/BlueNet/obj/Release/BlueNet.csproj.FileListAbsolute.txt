@@ -30,5 +30,10 @@ C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\res\values\
 C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\res\values\strings.xml
 C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\R.cs.flag
 C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\uploadflags.txt
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\bin\Release\protobuf-net.dll
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\bin\Release\protobuf-net.pdb
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\bin\Release\protobuf-net.xml
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\bin\Release\protobuf-net.dll.mdb
+C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\res\layout\gameview.xml
 C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\obj\Release\BlueNet.dll.mdb
 C:\Users\Andrew\Documents\GitHub\BlueNet\BlueNet\BlueNet\bin\Release\BlueNet.dll.mdb

@@ -14,6 +14,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+    <activity android:label="GameActivity" android:name="md559026b153b63155c1a6e4f33fc46bf14.GameActivity" />
     <provider android:name="mono.MonoRuntimeProvider" android:exported="false" android:initOrder="2147483647" android:authorities="com.triverticy.bluenet.mono.MonoRuntimeProvider.__mono_init__" />
   </application>
 </manifest>

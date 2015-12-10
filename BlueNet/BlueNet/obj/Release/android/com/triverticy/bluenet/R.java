@@ -18,30 +18,33 @@ public final class R {
         public static final int titlescreen=0x7f020004;
     }
     public static final class id {
-        public static final int Title=0x7f07000d;
+        public static final int Title=0x7f070010;
         public static final int button_scan=0x7f070006;
-        public static final int button_send=0x7f070012;
+        public static final int button_send=0x7f070015;
         public static final int clearButton=0x7f07000a;
-        public static final int createButton=0x7f070018;
-        public static final int deviceConnectedView=0x7f070019;
-        public static final int discoverable=0x7f07001b;
+        public static final int createButton=0x7f07001b;
+        public static final int deviceConnectedView=0x7f07001c;
+        public static final int discoverable=0x7f07001e;
         public static final int doneButton=0x7f07000b;
         public static final int drawButton=0x7f070008;
         public static final int drawCanvas=0x7f07000c;
-        public static final int drawTest=0x7f07000f;
-        public static final int editText1=0x7f070017;
-        public static final int edit_text_out=0x7f070011;
+        public static final int drawTest=0x7f070012;
+        public static final int editText1=0x7f07001a;
+        public static final int edit_text_out=0x7f070014;
         public static final int eraseButton=0x7f070009;
-        public static final int gameButton=0x7f07000e;
-        public static final int in=0x7f070010;
+        public static final int gameButton=0x7f070011;
+        public static final int in=0x7f070013;
         public static final int linearLayout1=0x7f070007;
-        public static final int nameText=0x7f070016;
-        public static final int newGameTitle=0x7f070013;
+        public static final int listView1=0x7f07000d;
+        public static final int messageEntry=0x7f07000f;
+        public static final int nameText=0x7f070019;
+        public static final int newGameTitle=0x7f070016;
         public static final int new_devices=0x7f070005;
-        public static final int numPlayers=0x7f070015;
-        public static final int numPlayersText=0x7f070014;
+        public static final int numPlayers=0x7f070018;
+        public static final int numPlayersText=0x7f070017;
         public static final int paired_devices=0x7f070003;
-        public static final int scan=0x7f07001a;
+        public static final int scan=0x7f07001d;
+        public static final int subButton=0x7f07000e;
         public static final int title_left_text=0x7f070000;
         public static final int title_new_devices=0x7f070004;
         public static final int title_paired_devices=0x7f070002;
@@ -52,11 +55,12 @@ public final class R {
         public static final int device_list=0x7f030001;
         public static final int device_name=0x7f030002;
         public static final int drawingview=0x7f030003;
-        public static final int home=0x7f030004;
-        public static final int main=0x7f030005;
-        public static final int message=0x7f030006;
-        public static final int textinput=0x7f030007;
-        public static final int waitview=0x7f030008;
+        public static final int gameview=0x7f030004;
+        public static final int home=0x7f030005;
+        public static final int main=0x7f030006;
+        public static final int message=0x7f030007;
+        public static final int textinput=0x7f030008;
+        public static final int waitview=0x7f030009;
     }
     public static final class menu {
         public static final int option_menu=0x7f060000;

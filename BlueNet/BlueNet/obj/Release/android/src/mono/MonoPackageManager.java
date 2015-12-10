@@ -68,6 +68,7 @@ public class MonoPackageManager {
 class MonoPackageManager_Resources {
 	public static final String[] Assemblies = new String[]{
 		"BlueNet.dll",
+		"protobuf-net.dll",
 		"Xamarin.Insights.dll",
 		"System.ServiceModel.Internals.dll",
 	};

@@ -34,6 +34,10 @@ SplashScreen.SplashActivity, BlueNet;md5f2f4d8a71a5b81d3105d911886877eea.SplashA
 SplashScreen.SplashActivity, BlueNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md5f2f4d8a71a5b81d3105d911886877eea.SplashActivity
 SplashScreen.SplashActivity;md5f2f4d8a71a5b81d3105d911886877eea.SplashActivity
 splashscreen.SplashActivity;md5f2f4d8a71a5b81d3105d911886877eea.SplashActivity
+BlueNet.GameActivity, BlueNet;md559026b153b63155c1a6e4f33fc46bf14.GameActivity
+BlueNet.GameActivity, BlueNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null;md559026b153b63155c1a6e4f33fc46bf14.GameActivity
+BlueNet.GameActivity;md559026b153b63155c1a6e4f33fc46bf14.GameActivity
+bluenet.GameActivity;md559026b153b63155c1a6e4f33fc46bf14.GameActivity
 Xamarin.InsightsCore.BackgroundManager, Xamarin.Insights;md55aa83cb61847c4249bb0dd44fd0a56e6.BackgroundManager
 Xamarin.InsightsCore.BackgroundManager, Xamarin.Insights, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null;md55aa83cb61847c4249bb0dd44fd0a56e6.BackgroundManager
 Xamarin.InsightsCore.BackgroundManager;md55aa83cb61847c4249bb0dd44fd0a56e6.BackgroundManager
